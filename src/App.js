@@ -1,13 +1,18 @@
-import React from 'react';
-import styles from './css/Button.module.css';
+import React, { Component } from 'react';
+import Layout from './components/Layout/Layout';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <button className={styles.error}>Error Button</button>
-    </div>
-  );
-}
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <Layout>
+          <p>Test</p>
+        </Layout>
+      </div>
+    );
+  }
+  
+} // end of Class declaration
 
 export default App;
