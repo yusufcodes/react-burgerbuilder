@@ -4,11 +4,13 @@ This repo is an extension of **this main repo** where I am learning how to use R
 
 ## Section 8: A Real App: The Burger Builder (Basic Version)
 
-### Setting up the Project
+### Setting up the Project + Creating a Layout Component
 
-### Creating a Layout Component
+Alongside adding a new component, we setup general areas of the project like CSS modules here.
 
 ### Starting Implementation of The Burger Builder Container
+
+In this section we build the **BurgerBuilder** component which will handle the creation of the burger by the user.
 
 ### Adding a Dynamic Ingredient Component
 
