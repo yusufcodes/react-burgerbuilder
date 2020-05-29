@@ -11,6 +11,7 @@ Alongside adding a new component, we setup general areas of the project like CSS
 ### Starting Implementation of The Burger Builder Container
 
 In this section we build the **BurgerBuilder** component which will handle the creation of the burger by the user.
+Burger and BurgerIngredient components were created, followed by the CSS needed to render a burger.
 
 ### Adding a Dynamic Ingredient Component
 
