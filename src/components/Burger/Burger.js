@@ -7,11 +7,9 @@ const burger = (props) => {
     // This retrieves each key so we will end up with:
     // ['salad', 'bacon', 'cheese', ...]
 
-
-
     /* transformedIngredients: We want a way to know how many of each ingredient in the ingredients 
     object we have. First, we start by grabbing only the keys */
-    const transformedIngredients = Object.keys(props.ingredients)
+    let transformedIngredients = Object.keys(props.ingredients)
     .map(igKey => {
         // Map #1: Each ingredient now becomes an Array with some undefined elements.
         // We do not care about the fact that is is not defined but rather, the length of such element.
@@ -27,7 +25,20 @@ const burger = (props) => {
         .map((_, index) => {
             return <BurgerIngredient key={igKey + index} type={igKey} />
         });
+    })
+    // Reduce: Currently we have an array of arrays, however we want to simply have one array of
+    // values - this is so we can determine how many ingredients in total we have.
+    // Reduce has the ability to extract the inner array elements and pop them out.
+    // For each iteration, we take the current element inside the inner array and add it to the end of
+    // out new 'accumulator' Array. This in turn ends up as a single one dimensional array.
+    .reduce((accumulatedArray, currentEl) => {
+        return accumulatedArray.concat(currentEl);
     });
+
+    if (transformedIngredients.length === 0) 
+    {
+        transformedIngredients = <p>Please start adding ingredients!</p>
+    }
 
     return (
         <div className={classes.Burger}>
