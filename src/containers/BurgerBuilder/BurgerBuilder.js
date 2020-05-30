@@ -21,7 +21,6 @@ class BurgerBuilder extends Component {
     }
 
     addIngredientHandler = (type) => {
-        console.log('....');
         // Adding to the number of ingredients
         const oldCount = this.state.ingredients[type];
         const newCount = oldCount + 1;
@@ -37,15 +36,50 @@ class BurgerBuilder extends Component {
         this.setState({
             totalPrice: newPrice,
             ingredients: newIngredients
-        })
+        });
+    }
+
+    removeIngredientHandler = (type) => {
+        // Adding to the number of ingredients
+
+        const oldCount = this.state.ingredients[type];
+        if(!oldCount <= 0)
+        {
+            const newCount = oldCount - 1;
+            const newIngredients = {
+                ...this.state.ingredients
+            };
+            newIngredients[type] = newCount;
+
+            // Adding to the price
+            const priceDeduction = INGREDIENT_PRICES[type];
+            const oldPrice = this.state.totalPrice;
+            const newPrice = oldPrice - priceDeduction;
+            this.setState({
+                totalPrice: newPrice,
+                ingredients: newIngredients
+            });
+        }
+        
     }
 
     render() {
+        // Boolean values dictating if particular button should be enabled/disabled
+        const disabledInfo = {
+            ...this.state.ingredients
+        };
+
+        for (let key in disabledInfo) {
+            disabledInfo[key] = disabledInfo[key] <= 0;
+        }
+
         return (
             <React.Fragment>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls
                 ingredientAdded={this.addIngredientHandler}
+                ingredientRemoved={this.removeIngredientHandler}
+                disabled={disabledInfo}
                 />
             </React.Fragment>
         )
