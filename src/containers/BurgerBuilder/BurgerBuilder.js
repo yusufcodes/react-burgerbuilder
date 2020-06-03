@@ -20,7 +20,8 @@ class BurgerBuilder extends Component {
             meat: 0
         },
         totalPrice: 4,
-        purchasable: false
+        purchasable: false,
+        purchasing: false
     }
 
     updatePurchasedState(newIngredients) {
@@ -78,6 +79,10 @@ class BurgerBuilder extends Component {
         }
     }
 
+    purchaseHandler = () => {
+        this.setState({purchasing: true});
+    }
+
     render() {
         // Boolean values dictating if particular button should be enabled/disabled
         const disabledInfo = {
@@ -90,7 +95,7 @@ class BurgerBuilder extends Component {
 
         return (
             <React.Fragment>
-                <Modal>
+                <Modal show={this.state.purchasing}>
                     <OrderSummary ingredients={this.state.ingredients}/>
                 </Modal>
                 <Burger ingredients={this.state.ingredients}/>
@@ -99,6 +104,7 @@ class BurgerBuilder extends Component {
                 ingredientRemoved={this.removeIngredientHandler}
                 disabled={disabledInfo}
                 totalPrice={this.state.totalPrice}
+                ordered={this.purchaseHandler}
                 purchasable={this.state.purchasable}
                 />
             </React.Fragment>
