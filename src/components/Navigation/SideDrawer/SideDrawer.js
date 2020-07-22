@@ -4,7 +4,10 @@ import NavigationItems from '../NavigationItems/NavigationItems';
 import Backdrop from '../../UI/Backdrop/Backdrop';
 import classes from './SideDrawer.module.css';
 
+/* SideDrawer: Mobile only displayed sidedrawer */
 const sideDrawer = props => {
+    // Using CSS classes to control whether or not sidedrawer is open
+    // Note: Class names are assigned and formatted using 'join' with a space
     let attachedClasses = [classes.SideDrawer, classes.Close];
     if (props.open) {
         attachedClasses = [classes.SideDrawer, classes.Open];

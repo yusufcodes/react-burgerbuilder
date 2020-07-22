@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
+
+/* Components */
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
-import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
+
+/* Utils */
+import axios from '../../axios-orders';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 const INGREDIENT_PRICES = {
@@ -14,6 +18,7 @@ const INGREDIENT_PRICES = {
     bacon: 0.7
 };
 
+/* BurgerBuilder: Main component handling the burger building side of the application. */
 class BurgerBuilder extends Component {
     state = {
         ingredients: null,
@@ -24,6 +29,7 @@ class BurgerBuilder extends Component {
         error: false
     }
 
+    // Fetching the ingredients from firebase DB (URL preset in axios defaults)
     componentDidMount() {
         axios.get('/ingredients.json')
         .then(response => {
@@ -34,15 +40,15 @@ class BurgerBuilder extends Component {
         });
     }
 
+    // updatePurchasedState: Determines if burger can be bought yet based on current price
     updatePurchasedState(newIngredients) {
         const sum = Object.values(newIngredients)
         .reduce((accumulator, currentValue) => 
         { return accumulator + currentValue }, 0);
-
-        console.log(sum);
         this.setState({purchasable: sum > 0});
     }
 
+    // addIngredientHandler: Handles addition of an ingredient to the burger, updating price and state accordingly
     addIngredientHandler = (type) => {
         // Adding to the number of ingredients
         const oldCount = this.state.ingredients[type];
@@ -56,15 +62,18 @@ class BurgerBuilder extends Component {
         const priceAddition = INGREDIENT_PRICES[type];
         const oldPrice = this.state.totalPrice;
         const newPrice = oldPrice + priceAddition;
+
+        // Updating the state
         this.setState({
             totalPrice: newPrice,
             ingredients: newIngredients
         });
 
-        // Passing in the most up to date version of ingredients
+        // Updating the purchasing state based on new ingredients
         this.updatePurchasedState(newIngredients);
     }
 
+    // removeIngredientHandler: Inverse of addIngredient method 
     removeIngredientHandler = (type) => {
         // Adding to the number of ingredients
 
@@ -77,10 +86,12 @@ class BurgerBuilder extends Component {
             };
             newIngredients[type] = newCount;
 
-            // Adding to the price
+            // Removing from the price
             const priceDeduction = INGREDIENT_PRICES[type];
             const oldPrice = this.state.totalPrice;
             const newPrice = oldPrice - priceDeduction;
+
+            // Updating the state
             this.setState({
                 totalPrice: newPrice,
                 ingredients: newIngredients
@@ -89,16 +100,15 @@ class BurgerBuilder extends Component {
         }
     }
 
-    purchaseHandler = () => {
-        this.setState({purchasing: true});
-    }
+    // purchaseHandler / purchaseCancelHandler: true/false setting of 'purchasing' determining if customer is buying a burger
+    purchaseHandler = () => this.setState({purchasing: true});
+    purchaseCancelHandler = () => this.setState({purchasing: false});
 
-    purchaseCancelHandler = () => {
-        this.setState({purchasing: false});
-    }
-
+    /* purchaseContinueHandler: When the customer clicks continue, a loading icon is displayed based on loading state,
+    and then the order details are built into a JS object and sent to DB via a post request */
     purchaseContinueHandler = () => {
         this.setState({loading: true});
+
         const order = {
             ingredients: this.state.ingredients,
             price: this.state.totalPrice,
@@ -130,20 +140,21 @@ class BurgerBuilder extends Component {
         const disabledInfo = {
             ...this.state.ingredients
         };
-
         for (let key in disabledInfo) {
             disabledInfo[key] = disabledInfo[key] <= 0;
         }
 
+        // Initial setting of OrderSummary to nothing / loader until ingredients loaded later
         let orderSummary = null;
-
         if (this.state.loading)
         {
             orderSummary = <Spinner />
         }
 
+        // Spinner set to main burger building section until ingredients are loaded in
         let burger = this.state.error ? <p>Ingredients cannot be loaded</p> : <Spinner />
 
+        // Loading of main burger building and order summary sections once the ingredients have loaded
         if (this.state.ingredients) {
             burger =
             <React.Fragment>

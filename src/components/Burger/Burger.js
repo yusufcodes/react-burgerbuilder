@@ -2,6 +2,8 @@ import React from 'react';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 import classes from './Burger.module.css'
 
+// Burger: Responsible for the section where the burger gets visually put together on the screen
+// Note: Lots of comments here as I was revising map and reduce
 const burger = (props) => {
     // Ingredients: Object -> Array
     // This retrieves each key so we will end up with:
