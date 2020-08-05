@@ -104,35 +104,51 @@ class BurgerBuilder extends Component {
     purchaseHandler = () => this.setState({purchasing: true});
     purchaseCancelHandler = () => this.setState({purchasing: false});
 
-    /* purchaseContinueHandler: When the customer clicks continue, a loading icon is displayed based on loading state,
-    and then the order details are built into a JS object and sent to DB via a post request */
+    /* purchaseContinueHandler: Starts off by sending the ingredients of the burger via query parameters. Example output:
+    checkout?bacon=1&cheese=1&meat=1&salad=1*/
     purchaseContinueHandler = () => {
-        this.setState({loading: true});
+        // Creating the query parameters with ingredients
+        const queryParams = [];
+        for (let i in this.state.ingredients) {
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+        }
 
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Yusuf',
-                address: {
-                    street: 'Test Street',
-                    zipCode: 2343,
-                    country: 'UK'
-                },
-                email: 'email@email.com'
-            },
-            deliveryMethod: 'Fast'
-        };
+        // Joining the array of parameters into one string
+        const queryString = queryParams.join('&');
 
-        axios.post('/orders.json', order)
-        .then(response => {
-            this.setState({loading: false});
-            this.setState({purchasing: false});
+        // Using the search property to add on the query parameters
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString
         })
-        .catch(error => {
-            this.setState({loading: false});
-            this.setState({purchasing: false});
-        });
+
+        // this.props.history.push('/checkout');
+        // this.setState({loading: true});
+
+        // const order = {
+        //     ingredients: this.state.ingredients,
+        //     price: this.state.totalPrice,
+        //     customer: {
+        //         name: 'Yusuf',
+        //         address: {
+        //             street: 'Test Street',
+        //             zipCode: 2343,
+        //             country: 'UK'
+        //         },
+        //         email: 'email@email.com'
+        //     },
+        //     deliveryMethod: 'Fast'
+        // };
+
+        // axios.post('/orders.json', order)
+        // .then(response => {
+        //     this.setState({loading: false});
+        //     this.setState({purchasing: false});
+        // })
+        // .catch(error => {
+        //     this.setState({loading: false});
+        //     this.setState({purchasing: false});
+        // });
     }
 
     render() {
