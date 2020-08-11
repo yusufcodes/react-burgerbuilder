@@ -82,6 +82,31 @@ class ContactData extends Component {
         });
     }
 
+    inputChangedHandler = (event, inputIdentifier) => {
+        console.log(event.target.value);
+
+        // Cloning state values
+
+        // Cloning the order form initial values such as Name, Street etc.
+        const updatedOrderForm = {
+            ...this.state.orderForm
+        };
+
+        // Cloning the values inside each form element type corresponding to above
+        // Reason: We can directly change these values now without affecting the state values for it
+        const updatedFormElement = {
+            ...updatedOrderForm[inputIdentifier]
+        }
+
+        // Setting user input to the 'value' property
+        updatedFormElement.value = event.target.value;
+
+        // Updating the general form data with our new value
+        updatedOrderForm[inputIdentifier] = updatedFormElement;
+
+        this.setState({orderForm: updatedOrderForm});
+    }
+
     render() {
         const formElementsArray = [];
 
@@ -99,7 +124,8 @@ class ContactData extends Component {
                 key={formElement.id}
                 elementType={formElement.config.elementType}
                 elementConfig={formElement.config.elementConfig}
-                value={formElement.config.value}/>
+                value={formElement.config.value}
+                changed={(event) => this.inputChangedHandler(event, formElement.id)}/>
             ))}
             <Button btnType="Success" clicked={this.orderHandler}>ORDER</Button>
         </form>);
